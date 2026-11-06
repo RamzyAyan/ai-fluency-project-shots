@@ -1,0 +1,23 @@
+# Secrets. .env holds your API keys and passwords. Git must never see it: once a
+# key is pushed to a public repository, anyone can read it, and it stays in the
+# history even after you delete the file. .env.example (no real values) may be
+# committed, to show which variables the project needs.
+.env
+.env.*
+!.env.example
+
+# Python and uv: rebuilt on any machine by `uv sync` and `uv run pytest`.
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Operating-system junk.
+.DS_Store
+Thumbs.db
+desktop.ini
+*:Zone.Identifier
+
+# Editor folders.
+.vscode/
+.idea/

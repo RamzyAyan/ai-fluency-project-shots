@@ -1,0 +1,18 @@
+[project]
+name = "ai-fluency-project"
+version = "0.1.0"
+description = "My Posture C project for 00560413 AI Fluency and Agentic Methods for Engineers (Technion)."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "proposal_complete: checks that every section of docs/project-proposal.md has been written (CI runs these on pull requests only)",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

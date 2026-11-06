@@ -1,0 +1,56 @@
+# CI: GitHub runs these checks on a clean machine every time you open or update
+# a pull request, and every time something lands on main.
+#
+# Two checks:
+#   Proposal structure  - always: the proposal exists, keeps its four headings,
+#                         and has no merge-conflict markers.
+#   Proposal complete   - on pull requests only: no "<!-- ... -->" placeholder
+#                         is left in any section. It is skipped on main, so a
+#                         brand-new repository made from the template starts
+#                         green, and it is skipped in the course template itself.
+#
+# On your laptop, `uv run pytest` runs both.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  structure:
+    name: Proposal structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+
+      - name: Install the project
+        run: uv sync --locked
+
+      - name: Check the proposal's structure
+        run: uv run pytest -m "not proposal_complete" -rfs
+
+  complete:
+    name: Proposal complete
+    # Pull requests only, and never in the template repository itself
+    # (its proposal is the blank Week 1 template on purpose).
+    if: ${{ github.event_name == 'pull_request' && !github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+
+      - name: Install the project
+        run: uv sync --locked
+
+      - name: Check that every section is written
+        run: uv run pytest -m proposal_complete -rfs
